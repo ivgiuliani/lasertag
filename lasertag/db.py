@@ -12,10 +12,9 @@ class TagIndex(SQLObject):
     tag = StringCol()
     value = StringCol()
 
-    tagIndex = DatabaseIndex("tag")
-    valueIndex = DatabaseIndex("value")
-
-    # TODO: add unique index on tag/value
+    tags = DatabaseIndex("tag")
+    values = DatabaseIndex("value")
+    unique_pairs = DatabaseIndex("tag", "value", unique=True)
 
 
 def make_connection(path=None):
