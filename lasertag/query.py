@@ -6,7 +6,11 @@ from .db import TagIndex, connection, transaction
 def add_value(tags, value):
     t = transaction()
     for tag in tags:
-        TagIndex(tag=tag, value=value, connection=t)
+        q = t.sqlrepr(Insert(TagIndex.sqlmeta.table, values={
+            "tag": tag,
+            "value": value
+        }))
+        t.queryAll(q)
     t.commit()
 
     return True
