@@ -41,6 +41,6 @@ def migrate():
     TagIndex.createTable(ifNotExists=True)
 
 
-def prepare():
-    make_connection()
+def prepare(conn_string):
+    make_connection(path=conn_string)
     migrate()

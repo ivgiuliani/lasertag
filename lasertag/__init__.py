@@ -1,5 +1,3 @@
-from .db import prepare as lasertag_db_prepare
+from .db import prepare
+from .config import Config
 from .query import *
-
-
-lasertag_db_prepare()
