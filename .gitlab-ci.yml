@@ -1,0 +1,10 @@
+before_script:
+  - apt-get update -qy
+  - apt-get install -y python-dev python-pip
+  - python -v
+  - which python
+  - pip install -r requirements.txt
+
+test:
+  script:
+    - ./run_tests.sh
