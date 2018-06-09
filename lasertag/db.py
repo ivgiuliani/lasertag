@@ -17,15 +17,13 @@ class TagIndex(SQLObject):
     unique_pairs = DatabaseIndex("tag", "value", unique=True)
 
 
-def make_connection(path=None):
-    if not path:
-        # Default to in-memory database
-        path = "sqlite:/:memory:?debug=1&logger=SQL&loglevel=info"
+def make_connection(conn_string):
+    assert conn_string is not None
 
     log = logging.getLogger("SQL")
     log.info("Log started")
 
-    sqlhub.processConnection = connectionForURI(path)
+    sqlhub.processConnection = connectionForURI(conn_string)
 
 
 def connection():
@@ -58,5 +56,5 @@ def migrate():
 
 
 def prepare(conn_string):
-    make_connection(path=conn_string)
+    make_connection(conn_string)
     migrate()
