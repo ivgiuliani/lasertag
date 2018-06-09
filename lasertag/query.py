@@ -6,11 +6,11 @@ from .db import TagIndex, connection, transaction
 def add_value(tags, value):
     with transaction() as t:
         for tag in tags:
-            q = t.sqlrepr(Insert(TagIndex.sqlmeta.table, values={
+            insert = Insert(TagIndex.sqlmeta.table, values={
                 "tag": tag,
                 "value": value
-            }))
-            t.query(q)
+            })
+            t.query(t.sqlrepr(insert))
 
     return True
 
