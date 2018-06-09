@@ -19,7 +19,11 @@ def add_value(tags, value):
     return True
 
 
-def query(tags):
+def query(tags=None):
+    tags = tags or []
+    if not tags:
+        raise AttributeError("Cannot specify an empty query")
+
     template = """
     SELECT DISTINCT value
       FROM tag_index
