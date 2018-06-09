@@ -10,7 +10,7 @@ def add_value(tags, value):
             "tag": tag,
             "value": value
         }))
-        t.queryAll(q)
+        t.query(q)
     t.commit()
 
     return True
