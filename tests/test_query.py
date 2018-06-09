@@ -16,6 +16,14 @@ def test_setup():
     lasertag.prepare(lasertag.IN_MEMORY_SQLITE)
 
 
+def test_populate():
+    lasertag.add_value(["source:http", "userid:123", "type:image"], "image1.jpg")
+    lasertag.add_value(["source:http", "userid:345", "type:description"], "desc1")
+    lasertag.add_value(["source:http", "userid:345", "type:image"], "image2.jpg")
+    lasertag.add_value(["source:http", "userid:456", "type:image"], "image3.jpg")
+    lasertag.add_value(["source:sftp", "host:bank.com", "category:control"], "bank-thing1")
+
+
 class AddValueTest(unittest.TestCase):
     def setUp(self):
         test_setup()
@@ -36,14 +44,7 @@ class AddValueTest(unittest.TestCase):
 class QueryTest(unittest.TestCase):
     def setUp(self):
         test_setup()
-        self.populate()
-
-    def populate(self):
-        lasertag.add_value(["source:http", "userid:123", "type:image"], "image1.jpg")
-        lasertag.add_value(["source:http", "userid:345", "type:description"], "desc1")
-        lasertag.add_value(["source:http", "userid:345", "type:image"], "image2.jpg")
-        lasertag.add_value(["source:http", "userid:456", "type:image"], "image3.jpg")
-        lasertag.add_value(["source:sftp", "host:bank.com", "category:control"], "bank-thing1")
+        test_populate()
 
     def test_query_single_tag_with_single_matching_value(self):
         self.assertListEqual(["bank-thing1"], lasertag.query(["host:bank.com"]))
@@ -68,6 +69,19 @@ class QueryTest(unittest.TestCase):
 
     def test_query_existing_tag_with_no_results(self):
         self.assertListEqual([], lasertag.query(["source:http", "host:bank.com"]))
+
+
+class TagsTest(unittest.TestCase):
+    def setUp(self):
+        test_setup()
+        test_populate()
+
+    def test_returns_all_tags_for_existing_value(self):
+        self.assertListEqual(["source:http", "userid:456", "type:image"],
+                             lasertag.tags("image3.jpg"))
+
+    def test_returns_empty_list_for_invalid_value(self):
+        self.assertListEqual([], lasertag.tags("doesntexist"))
 
 
 if __name__ == "__main__":
