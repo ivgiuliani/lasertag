@@ -1,8 +1,6 @@
 from sqlobject import StringCol, SQLObject, DatabaseIndex
 from sqlobject import sqlhub, connectionForURI
 
-import logging
-
 
 class TagIndex(SQLObject):
     tag = StringCol()
@@ -15,10 +13,6 @@ class TagIndex(SQLObject):
 
 def make_connection(conn_string):
     assert conn_string is not None
-
-    log = logging.getLogger("lasertag")
-    log.info("Estabilishing a connection")
-
     sqlhub.processConnection = connectionForURI(conn_string)
 
 
