@@ -2,10 +2,6 @@ from sqlobject import StringCol, SQLObject, DatabaseIndex
 from sqlobject import sqlhub, connectionForURI
 
 import logging
-import sys
-
-# TODO: move this out of here
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 class TagIndex(SQLObject):
