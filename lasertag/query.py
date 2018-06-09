@@ -24,11 +24,7 @@ def query(tags=None):
     if not tags:
         raise AttributeError("Cannot specify an empty query")
 
-    template = """
-    SELECT DISTINCT value
-      FROM tag_index
-      WHERE tag = '%s'
-    """
+    template = "SELECT DISTINCT value FROM tag_index WHERE tag = '%s'"
     q = " INTERSECT ".join([
         template % tag for tag in tags
     ])
