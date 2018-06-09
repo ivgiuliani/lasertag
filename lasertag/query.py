@@ -1,16 +1,20 @@
 from sqlobject.sqlbuilder import *
+from sqlobject import dberrors
 
 from .db import TagIndex, connection, transaction
 
 
 def add_value(tags, value):
-    with transaction() as t:
-        for tag in tags:
-            insert = Insert(TagIndex.sqlmeta.table, values={
-                "tag": tag,
-                "value": value
-            })
-            t.query(t.sqlrepr(insert))
+    try:
+        with transaction() as t:
+            for tag in tags:
+                insert = Insert(TagIndex.sqlmeta.table, values={
+                    "tag": tag,
+                    "value": value
+                })
+                t.query(t.sqlrepr(insert))
+    except dberrors.DuplicateEntryError:
+        raise AttributeError("Duplicate detected for %s:%s" % (tags, value))
 
     return True
 

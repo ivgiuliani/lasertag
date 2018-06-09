@@ -22,6 +22,12 @@ class AddValueTest(unittest.TestCase):
         self.assertTrue("hello world" in lasertag.query(["t2"]))
         self.assertTrue("hello world" in lasertag.query(["t1", "t2"]))
 
+    def test_no_duplicate_pairs(self):
+        lasertag.add_value(["t1"], "v")
+        lasertag.add_value(["t2"], "v")
+        with self.assertRaises(AttributeError):
+            lasertag.add_value(["t1"], "v")
+
 
 if __name__ == "__main__":
     unittest.main()
