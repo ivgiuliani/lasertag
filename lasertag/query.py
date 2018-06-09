@@ -4,14 +4,13 @@ from .db import TagIndex, connection, transaction
 
 
 def add_value(tags, value):
-    t = transaction()
-    for tag in tags:
-        q = t.sqlrepr(Insert(TagIndex.sqlmeta.table, values={
-            "tag": tag,
-            "value": value
-        }))
-        t.query(q)
-    t.commit()
+    with transaction() as t:
+        for tag in tags:
+            q = t.sqlrepr(Insert(TagIndex.sqlmeta.table, values={
+                "tag": tag,
+                "value": value
+            }))
+            t.query(q)
 
     return True
 

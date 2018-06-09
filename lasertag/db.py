@@ -32,8 +32,25 @@ def connection():
     return sqlhub.processConnection
 
 
+class ControlledTransaction(object):
+    def __init__(self, connection):
+        self.connection = connection
+        self.transaction = None
+
+    def __enter__(self):
+        self.transaction = self.connection.transaction()
+        return self.transaction
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_tb is None:
+            # no exception, commit the transaction
+            self.transaction.commit()
+        else:
+            self.transaction.rollback()
+
+
 def transaction():
-    return connection().transaction()
+    return ControlledTransaction(connection())
 
 
 def migrate():
