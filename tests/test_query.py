@@ -70,6 +70,9 @@ class QueryTest(unittest.TestCase):
     def test_query_existing_tag_with_no_results(self):
         self.assertListEqual([], lasertag.query(["source:http", "host:bank.com"]))
 
+    def test_query_single_tag_given_as_string(self):
+        self.assertListEqual(["desc1", "image2.jpg"], lasertag.query("userid:345"))
+
 
 class TagsTest(unittest.TestCase):
     def setUp(self):
