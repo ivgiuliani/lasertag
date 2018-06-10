@@ -11,8 +11,11 @@ from .compat import is_string
 IDENTITY_TRANSFORMER = BaseTransformer()
 
 
-def add_value(tags, value, transformer=IDENTITY_TRANSFORMER):
-    tags, value = transformer.transform(tags, value)
+def add_value(tags, value, transformers=None):
+    transformers = transformers or [IDENTITY_TRANSFORMER]
+    for transformer in transformers:
+        tags, value = transformer.transform(tags, value)
+
     if not tags:
         raise AttributeError("Cannot add value with no tags")
 

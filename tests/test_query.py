@@ -65,21 +65,39 @@ class AddValueTest(unittest.TestCase):
         self.assertEqual([], lasertag.query("f"))
 
     def test_add_with_tag_transformer(self):
-        lasertag.add_value(["t1", "t2"], "value", transformer=self.TestTagTransformer())
+        lasertag.add_value(["t1", "t2"], "value", transformers=[self.TestTagTransformer()])
 
         self.assertEqual([], lasertag.query("t1"))
         self.assertEqual([], lasertag.query("t2"))
         self.assertEqual(["value"], lasertag.query(["new", "tags"]))
 
     def test_add_with_value_transformer(self):
-        lasertag.add_value(["t1", "t2"], "value", transformer=self.TestValueTransfomer())
+        lasertag.add_value(["t1", "t2"], "value", transformers=[self.TestValueTransfomer()])
 
         self.assertEqual([], lasertag.query("new"))
         self.assertEqual([], lasertag.query("tags"))
         self.assertEqual(["new value"], lasertag.query(["t1", "t2"]))
 
     def test_add_with_both_tag_and_value_transformer(self):
-        lasertag.add_value(["t1", "t2"], "value", transformer=self.TestTransfomer())
+        lasertag.add_value(["t1", "t2"], "value", transformers=[self.TestTransfomer()])
+
+        self.assertEqual([], lasertag.query("t1"))
+        self.assertEqual([], lasertag.query("t2"))
+        self.assertEqual([], lasertag.tags("value"))
+        self.assertEqual(["new value"], lasertag.query(["new", "tags"]))
+
+    def test_add_empty_transformer_list(self):
+        lasertag.add_value(["t1", "t2"], "hello world", transformers=[])
+        self.assertTrue("hello world" in lasertag.query(["t1"]))
+        self.assertTrue("hello world" in lasertag.query(["t2"]))
+        self.assertTrue("hello world" in lasertag.query(["t1", "t2"]))
+
+    def test_add_with_multiple_transfomers(self):
+        lasertag.add_value(["t1", "t2"], "value",
+                           transformers=[
+                               self.TestTagTransformer(),
+                               self.TestValueTransfomer()
+                           ])
 
         self.assertEqual([], lasertag.query("t1"))
         self.assertEqual([], lasertag.query("t2"))
