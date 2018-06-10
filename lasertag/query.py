@@ -4,6 +4,7 @@ from sqlobject import dberrors
 from .db import TagIndex, connection, transaction
 from .compat import is_string
 
+
 def add_value(tags, value):
     try:
         with transaction() as t:
