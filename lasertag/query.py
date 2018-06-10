@@ -13,6 +13,8 @@ IDENTITY_TRANSFORMER = BaseTransformer()
 
 def add_value(tags, value, transformer=IDENTITY_TRANSFORMER):
     tags, value = transformer.transform(tags, value)
+    if not tags:
+        raise AttributeError("Cannot add value with no tags")
 
     try:
         with transaction() as t:
