@@ -40,6 +40,14 @@ class AddValueTest(unittest.TestCase):
         with self.assertRaises(AttributeError):
             lasertag.add_value(["t1"], "v")
 
+    def test_add_duplicate_rollsback_changes(self):
+        lasertag.add_value(["a", "b", "c"], "v")
+        with self.assertRaises(AttributeError):
+            lasertag.add_value(["c", "d", "e", "f"], "v")
+        self.assertEqual([], lasertag.query("d"))
+        self.assertEqual([], lasertag.query("e"))
+        self.assertEqual([], lasertag.query("f"))
+
 
 class QueryTest(unittest.TestCase):
     def setUp(self):
