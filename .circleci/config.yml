@@ -1,0 +1,10 @@
+version: 2
+
+jobs:
+  tests:
+    docker:
+      - image: circleci/python:2.7.15
+    steps:
+      - checkout
+      - run: pip install -r requirements.txt
+      - run: ./run_tests.sh
