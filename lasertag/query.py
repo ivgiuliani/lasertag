@@ -2,10 +2,18 @@ from sqlobject.sqlbuilder import *
 from sqlobject import dberrors
 
 from .db import TagIndex, connection, transaction
+from .transformers import BaseTransformer
 from .compat import is_string
 
 
-def add_value(tags, value):
+# The default transformer will just return the same tags and values without
+# any additional changes.
+IDENTITY_TRANSFORMER = BaseTransformer()
+
+
+def add_value(tags, value, transformer=IDENTITY_TRANSFORMER):
+    tags, value = transformer.transform(tags, value)
+
     try:
         with transaction() as t:
             for tag in tags:

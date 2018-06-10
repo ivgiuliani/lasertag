@@ -25,6 +25,18 @@ def test_populate():
 
 
 class AddValueTest(unittest.TestCase):
+    class TestTagTransformer(lasertag.BaseTransformer):
+        def transform(self, tags, value, *args, **kwargs):
+            return ["new", "tags"], value
+
+    class TestValueTransfomer(lasertag.BaseTransformer):
+        def transform(self, tags, value, *args, **kwargs):
+            return tags, "new value"
+
+    class TestTransfomer(lasertag.BaseTransformer):
+        def transform(self, tags, value, *args, **kwargs):
+            return ["new", "tags"], "new value"
+
     def setUp(self):
         test_setup()
 
@@ -47,6 +59,28 @@ class AddValueTest(unittest.TestCase):
         self.assertEqual([], lasertag.query("d"))
         self.assertEqual([], lasertag.query("e"))
         self.assertEqual([], lasertag.query("f"))
+
+    def test_add_with_tag_transformer(self):
+        lasertag.add_value(["t1", "t2"], "value", transformer=self.TestTagTransformer())
+
+        self.assertEqual([], lasertag.query("t1"))
+        self.assertEqual([], lasertag.query("t2"))
+        self.assertEqual(["value"], lasertag.query(["new", "tags"]))
+
+    def test_add_with_value_transformer(self):
+        lasertag.add_value(["t1", "t2"], "value", transformer=self.TestValueTransfomer())
+
+        self.assertEqual([], lasertag.query("new"))
+        self.assertEqual([], lasertag.query("tags"))
+        self.assertEqual(["new value"], lasertag.query(["t1", "t2"]))
+
+    def test_add_with_both_tag_and_value_transformer(self):
+        lasertag.add_value(["t1", "t2"], "value", transformer=self.TestTransfomer())
+
+        self.assertEqual([], lasertag.query("t1"))
+        self.assertEqual([], lasertag.query("t2"))
+        self.assertEqual([], lasertag.tags("value"))
+        self.assertEqual(["new value"], lasertag.query(["new", "tags"]))
 
 
 class QueryTest(unittest.TestCase):
