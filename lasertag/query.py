@@ -2,7 +2,7 @@ from sqlobject.sqlbuilder import *
 from sqlobject import dberrors
 
 from .db import TagIndex, connection, transaction
-
+from .compat import is_string
 
 def add_value(tags, value):
     try:
@@ -24,7 +24,7 @@ def query(tags=None):
     if not tags:
         raise AttributeError("Cannot specify an empty query")
 
-    if isinstance(tags, (str, unicode)):
+    if is_string(tags):
         tags = [tags]
 
     template = "SELECT DISTINCT value FROM tag_index WHERE tag = '%s'"
