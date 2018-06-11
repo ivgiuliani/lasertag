@@ -4,6 +4,7 @@ setup(
     name="lasertag",
     packages=["lasertag"],
     package_dir={"lasertag": "lasertag"},
+    version="0.0.1",
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*",
     install_requires=[
         "sqlobject>=3.7.0",
