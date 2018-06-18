@@ -56,9 +56,14 @@ def tags(value):
     return [t[0] for t in connection().queryAll(q)]
 
 
-def rename_tag(tag, to):
+def rename_tag(tag, to, with_value=None):
+    where_stmt = "tag = '%s'" % tag
+    if with_value is not None:
+        where_stmt += " AND value = '%s'" % with_value
+
     update = Update(TagIndex.sqlmeta.table, values={"tag": to},
-                    where="tag = '%s'" % tag)
+                    where=where_stmt)
+
     q = connection().sqlrepr(update)
     connection().query(q)
 

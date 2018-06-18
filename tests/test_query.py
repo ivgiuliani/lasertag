@@ -183,6 +183,15 @@ class RenameTagTest(unittest.TestCase):
         self.assertTrue(len(lasertag.query("invalid")) == 0)
         self.assertTrue(len(lasertag.query("invalid2")) == 0)
 
+    def test_rename_with_value(self):
+        lasertag.rename_tag("userid:345", "userid:999", with_value="image2.jpg")
+        self.assertTrue(len(lasertag.query("userid:345")) == 1)
+        self.assertTrue(len(lasertag.query("userid:999")) == 1)
+        self.assertEqual(["source:http", "userid:345", "type:description"],
+                         lasertag.tags("desc1"))
+        self.assertEqual(["source:http", "userid:999", "type:image"],
+                         lasertag.tags("image2.jpg"))
+
 
 class ReplaceValueTest(unittest.TestCase):
     def setUp(self):
