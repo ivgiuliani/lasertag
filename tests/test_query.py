@@ -17,11 +17,16 @@ def test_setup():
 
 
 def test_populate():
-    lasertag.add_value(["source:http", "userid:123", "type:image"], "image1.jpg")
-    lasertag.add_value(["source:http", "userid:345", "type:description"], "desc1")
-    lasertag.add_value(["source:http", "userid:345", "type:image"], "image2.jpg")
-    lasertag.add_value(["source:http", "userid:456", "type:image"], "image3.jpg")
-    lasertag.add_value(["source:sftp", "host:bank.com", "category:control"], "bank-thing1")
+    lasertag.add_value(["source:http", "userid:123", "type:image"],
+                       "image1.jpg")
+    lasertag.add_value(["source:http", "userid:345", "type:description"],
+                       "desc1")
+    lasertag.add_value(["source:http", "userid:345", "type:image"],
+                       "image2.jpg")
+    lasertag.add_value(["source:http", "userid:456", "type:image"],
+                       "image3.jpg")
+    lasertag.add_value(["source:sftp", "host:bank.com", "category:control"],
+                       "bank-thing1")
 
 
 class AddValueTest(unittest.TestCase):
@@ -65,21 +70,24 @@ class AddValueTest(unittest.TestCase):
         self.assertEqual([], lasertag.query("f"))
 
     def test_add_with_tag_transformer(self):
-        lasertag.add_value(["t1", "t2"], "value", transformers=[self.TestTagTransformer()])
+        lasertag.add_value(["t1", "t2"], "value",
+                           transformers=[self.TestTagTransformer()])
 
         self.assertEqual([], lasertag.query("t1"))
         self.assertEqual([], lasertag.query("t2"))
         self.assertEqual(["value"], lasertag.query(["new", "tags"]))
 
     def test_add_with_value_transformer(self):
-        lasertag.add_value(["t1", "t2"], "value", transformers=[self.TestValueTransfomer()])
+        lasertag.add_value(["t1", "t2"], "value",
+                           transformers=[self.TestValueTransfomer()])
 
         self.assertEqual([], lasertag.query("new"))
         self.assertEqual([], lasertag.query("tags"))
         self.assertEqual(["new value"], lasertag.query(["t1", "t2"]))
 
     def test_add_with_both_tag_and_value_transformer(self):
-        lasertag.add_value(["t1", "t2"], "value", transformers=[self.TestTransfomer()])
+        lasertag.add_value(["t1", "t2"], "value",
+                           transformers=[self.TestTransfomer()])
 
         self.assertEqual([], lasertag.query("t1"))
         self.assertEqual([], lasertag.query("t2"))
@@ -111,14 +119,16 @@ class QueryTest(unittest.TestCase):
         test_populate()
 
     def test_query_single_tag_with_single_matching_value(self):
-        self.assertListEqual(["bank-thing1"], lasertag.query(["host:bank.com"]))
+        self.assertListEqual(["bank-thing1"],
+                             lasertag.query(["host:bank.com"]))
 
     def test_query_single_tag_with_multiple_matching_values(self):
         self.assertListEqual(["image1.jpg", "image2.jpg", "image3.jpg"],
                              lasertag.query(["type:image"]))
 
     def test_query_multiple_tags_with_single_matching_value(self):
-        self.assertListEqual(["bank-thing1"], lasertag.query(["host:bank.com", "source:sftp"]))
+        self.assertListEqual(["bank-thing1"],
+                             lasertag.query(["host:bank.com", "source:sftp"]))
 
     def test_query_multiple_tags_with_multiple_matching_values(self):
         self.assertListEqual(["desc1", "image2.jpg"],
@@ -132,10 +142,12 @@ class QueryTest(unittest.TestCase):
         self.assertListEqual([], lasertag.query(["invalid"]))
 
     def test_query_existing_tag_with_no_results(self):
-        self.assertListEqual([], lasertag.query(["source:http", "host:bank.com"]))
+        self.assertListEqual([],
+                             lasertag.query(["source:http", "host:bank.com"]))
 
     def test_query_single_tag_given_as_string(self):
-        self.assertListEqual(["desc1", "image2.jpg"], lasertag.query("userid:345"))
+        self.assertListEqual(["desc1", "image2.jpg"],
+                             lasertag.query("userid:345"))
 
 
 class TagsTest(unittest.TestCase):
