@@ -151,5 +151,26 @@ class TagsTest(unittest.TestCase):
         self.assertListEqual([], lasertag.tags("doesntexist"))
 
 
+class RenameTagTest(unittest.TestCase):
+    def setUp(self):
+        test_setup()
+        test_populate()
+
+    def test_rename_single_occurrence_tag(self):
+        lasertag.rename_tag("host:bank.com", to="host:anotherbank.com")
+        self.assertTrue(len(lasertag.query("host:bank.com")) == 0)
+        self.assertTrue(len(lasertag.query("host:anotherbank.com")) == 1)
+
+    def test_rename_multi_occurrence_tag(self):
+        lasertag.rename_tag("userid:345", to="userid:999")
+        self.assertTrue(len(lasertag.query("userid:345")) == 0)
+        self.assertTrue(len(lasertag.query("userid:999")) == 2)
+
+    def test_rename_no_occurrence_tag(self):
+        lasertag.rename_tag("invalid", to="invalid2")
+        self.assertTrue(len(lasertag.query("invalid")) == 0)
+        self.assertTrue(len(lasertag.query("invalid2")) == 0)
+
+
 if __name__ == "__main__":
     unittest.main()
