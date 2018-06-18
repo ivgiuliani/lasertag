@@ -61,3 +61,10 @@ def rename_tag(tag, to):
                     where="tag = '%s'" % tag)
     q = connection().sqlrepr(update)
     connection().query(q)
+
+
+def replace_value(value, to):
+    update = Update(TagIndex.sqlmeta.table, values={"value": to},
+                    where="value = '%s'" % value)
+    q = connection().sqlrepr(update)
+    connection().query(q)

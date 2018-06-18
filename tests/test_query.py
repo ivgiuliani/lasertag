@@ -172,5 +172,22 @@ class RenameTagTest(unittest.TestCase):
         self.assertTrue(len(lasertag.query("invalid2")) == 0)
 
 
+class ReplaceValueTest(unittest.TestCase):
+    def setUp(self):
+        test_setup()
+        test_populate()
+
+    def test_replace_value(self):
+        lasertag.replace_value("image1.jpg", to="image-new.jpg")
+        self.assertEquals([], lasertag.tags("image1.jpg"))
+        self.assertEquals(["source:http", "userid:123", "type:image"],
+                          lasertag.tags("image-new.jpg"))
+
+    def test_replace_no_occurrence_value(self):
+        lasertag.replace_value("invalid", to="invalid2")
+        self.assertEquals([], lasertag.tags("invalid"))
+        self.assertEquals([], lasertag.tags("invalid2"))
+
+
 if __name__ == "__main__":
     unittest.main()
